@@ -13,12 +13,12 @@ pipeline {
     stages {
         stage("Compile") {
             steps {
-                sh 'docker build -f Dockerfile.compile'
+                sh 'docker build -f Dockerfile.compile .'
             }
         }
         stage("Build") {
             steps {
-                sh 'docker build -f Dockerfile.build'
+                sh 'docker build -f Dockerfile.build .'
             }
         }
     }
