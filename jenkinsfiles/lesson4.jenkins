@@ -11,15 +11,29 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
+    environment {
+        IMAGE_VER = '0.0.1'
+    }
     stages {
         stage("Compile") {
             steps {
-                sh 'docker build -f Dockerfile.compile .'
+                sh 'docker build -f Dockerfile.compile -t gobuild:latest .'
             }
         }
         stage("Build") {
             steps {
-                sh 'docker build -f Dockerfile.build .'
+                sh 'docker build -f Dockerfile.build -t myapp:${IMAGE_VER} .'
+            }
+        }
+        stage("Deploy to k8s") {
+            steps {
+                sh 'docker export --output=/home/jenkins/myapp.tar myapp:${IMAGE_VER}'
+                sh 'scp -p2222 /home/jenkins/myapp.tar vagrant@10.0.2.2:/home/vagrant'
+                sh 'ssh -p2222 vagrant@10.0.2.2 \'docker image import /home/jenkins/myapp.tar myapp:${IMAGE_VER} && rm /home/jenkins/myapp.tar\''
+                sh 'rm /home/jenkins/myapp.tar'
+                sh 'sed -i \'s|{{VER}}|${IMAGE_VER}|g\' deployment_myapp.yml'
+                sh 'scp -p2222 deployment_myapp.yml vagrant@10.0.2.2:/home/vagrant'
+                sh 'ssh -p2222 vagrant@10.0.2.2 \'k apply -f /home/vagrant/deployment_myapp.yml\''
             }
         }
     }
