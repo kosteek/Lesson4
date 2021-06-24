@@ -8,4 +8,4 @@ RUN go mod init go.mod &&\
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
     
 FROM alpine:latest
-COPY --from=intermediate /app/app ./app
+COPY --from=intermediate /app/app ./
