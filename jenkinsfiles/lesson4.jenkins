@@ -8,6 +8,7 @@ pipeline {
     }
     triggers { pollSCM('* * * * *') }
     options {
+        skipDefaultCheckout(true)
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
@@ -17,6 +18,8 @@ pipeline {
     stages {
         stage("Compile") {
             steps {
+                cleanWs()
+                checkout scm
                 sh 'bash ./compile.sh'
             }
         }
