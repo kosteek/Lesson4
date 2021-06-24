@@ -22,8 +22,7 @@ pipeline {
         }
         stage("Build") {
             steps {
-                sh 'docker build -f Dockerfile.build -t myapp:'+${IMAGE_VER}+' .'
-                sh 'rm ./app'
+                sh 'ls -a && docker build -f Dockerfile.build -t myapp:'+${IMAGE_VER}+' .'
             }
         }
         stage("Deploy to k8s") {
