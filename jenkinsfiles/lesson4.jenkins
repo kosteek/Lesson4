@@ -17,8 +17,13 @@ pipeline {
     stages {
         stage("Compile") {
             steps {
-                sh 'docker build -f Dockerfile.compile -t gobuild:latest .'
-                sh "docker run --rm -i -v ${env.WORKSPACE} -w /app/bin gobuild:latest bash -c 'ls -a /app/bin && cp /app/app /app/bin/'"
+                sh '''docker run --rm -i -v ${env.WORKSPACE} -w /app golang:1.16 bash -c "cd /app && go mod init go.mod &&
+                      go mod tidy &&
+                      go get -u github.com/go-sql-driver/mysql &&\
+                      CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app ."
+                
+                
+                '''
             }
         }
         stage("Build") {
