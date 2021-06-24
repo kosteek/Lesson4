@@ -23,7 +23,7 @@ pipeline {
         }
         stage("Build") {
             steps {
-                sh "ls -a && docker build -f Dockerfile.build -t myapp:${IMAGE_VER} . && rmdir ./bin"
+                sh "ls -a ./bin && docker build -f Dockerfile.build -t myapp:${IMAGE_VER} . && rmdir ./bin"
             }
         }
         stage("Deploy to k8s") {
