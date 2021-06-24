@@ -27,7 +27,7 @@ pipeline {
         }
         stage("Deploy to k8s") {
             steps {
-                sh 'docker export --output=myapp.tar myapp:${IMAGE_VER}'
+                sh 'docker export --output=myapp.tar'
                 sh 'scp -p2222 myapp.tar vagrant@10.0.2.2:/home/vagrant'
                 sh 'ssh -p2222 vagrant@10.0.2.2 \'docker image import /home/vagrant/myapp.tar myapp:${IMAGE_VER} && rm /home/vagrant/myapp.tar\''
                 sh 'rm myapp.tar'
