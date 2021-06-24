@@ -18,7 +18,7 @@ pipeline {
         stage("Compile") {
             steps {
                 sh 'docker build -f Dockerfile.compile -t gobuild:latest .'
-                sh "docker run --rm -ti -v ${env.WORKSPACE} -w /app/bin gobuild:latest bash -c 'cp /app/app /app/bin/app'"
+                sh "docker run --rm -i -v ${env.WORKSPACE} -w /app/bin gobuild:latest bash -c 'cp /app/app /app/bin/app'"
             }
         }
         stage("Build") {
