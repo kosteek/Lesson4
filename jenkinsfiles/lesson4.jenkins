@@ -18,11 +18,12 @@ pipeline {
         stage("Compile") {
             steps {
                 sh 'docker build -f Dockerfile.compile -t gobuild:latest .'
+                sh 'docker run -v ./:/app/bin --rm -ti gobuild:latest bash -c "cp /app/app /app/bin/app"'
             }
         }
         stage("Build") {
             steps {
-                sh "ls -a && docker build -f Dockerfile.build -t myapp:${IMAGE_VER} ."
+                sh "ls -a && docker build -f Dockerfile.build -t myapp:${IMAGE_VER} . && rmdir ./bin"
             }
         }
         stage("Deploy to k8s") {
