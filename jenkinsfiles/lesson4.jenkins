@@ -17,14 +17,13 @@ pipeline {
     stages {
         stage("Compile") {
             steps {
-                sh 'mkdir bin'
-                sh 'docker build -f Dockerfile.compile -v ./bin:/app/bin -t gobuild:latest .'
+                sh 'docker build -f Dockerfile.compile -t gobuild:latest .'
             }
         }
         stage("Build") {
             steps {
                 sh 'docker build -f Dockerfile.build -t myapp:'+${IMAGE_VER}+' .'
-                sh 'rm -rf ./bin'
+                sh 'rm ./app'
             }
         }
         stage("Deploy to k8s") {
