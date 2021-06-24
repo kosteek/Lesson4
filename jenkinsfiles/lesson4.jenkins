@@ -25,7 +25,7 @@ pipeline {
         }
         stage("Build") {
             steps {
-                sh "docker build -f Dockerfile.build -t myapp:${IMAGE_VER} . && rmdir ./bin"
+                sh "docker build -f Dockerfile.build -t myapp:${IMAGE_VER} ."
             }
         }
         stage("Deploy to k8s") {
