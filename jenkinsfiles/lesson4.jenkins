@@ -17,14 +17,7 @@ pipeline {
     stages {
         stage("Compile") {
             steps {
-                sh '''
-                      docker run --rm -i -v ${env.WORKSPACE} -w /app golang:1.16 bash -c << 'ENDSSH'
-                      cd /app && go mod init go.mod &&
-                      go mod tidy &&
-                      go get -u github.com/go-sql-driver/mysql &&
-                      CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
-                      ENDSSH'
-                '''
+                sh 'docker run --rm -i -v ${env.WORKSPACE} -w /app golang:1.16 bash -c "cd /app && go mod init go.mod &&  go mod tidy && go get -u github.com/go-sql-driver/mysql && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app ."'
             }
         }
         stage("Build") {
