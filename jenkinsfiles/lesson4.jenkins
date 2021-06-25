@@ -13,7 +13,7 @@ pipeline {
         timestamps()
     }
     environment {
-        IMAGE_VER = '0.0.1'
+        IMAGE_VER = '0.0.2'
     }
     stages {
         stage("Compile") {
@@ -30,9 +30,9 @@ pipeline {
         }
         stage("Deploy to k8s") {
             steps {
-                sh "docker image save --output=myapp.tar myapp:${IMAGE_VER}"
+                sh "docker save > myapp:${IMAGE_VER}"
                 sh 'scp -P2222 myapp.tar vagrant@10.0.2.2:/home/vagrant'
-                sh "ssh -p2222 vagrant@10.0.2.2 'docker image import /home/vagrant/myapp.tar myapp:${IMAGE_VER} && rm /home/vagrant/myapp.tar'"
+                sh "ssh -p2222 vagrant@10.0.2.2 'docker load < /home/vagrant/myapp.tar myapp:${IMAGE_VER} && rm /home/vagrant/myapp.tar'"
                 sh 'rm myapp.tar'
                 sh "sed -i 's|{{VER}}|${IMAGE_VER}|g' deployment_myapp.yml"
                 sh 'scp -P2222 deployment_myapp.yml vagrant@10.0.2.2:/home/vagrant'
