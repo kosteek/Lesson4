@@ -20,7 +20,7 @@ pipeline {
             steps {
                 cleanWs()
                 checkout scm
-                sh 'bash ./compile.sh'
+                sh 'bash ./jenkinsfiles/compile.sh'
             }
         }
         stage("Build") {
@@ -33,7 +33,6 @@ pipeline {
                 sh "docker save myapp:${IMAGE_VER} > myapp.tar"
                 sh 'scp -P2222 myapp.tar vagrant@10.0.2.2:/home/vagrant'
                 sh "ssh -p2222 vagrant@10.0.2.2 'docker load < /home/vagrant/myapp.tar && rm /home/vagrant/myapp.tar'"
-                sh 'rm myapp.tar'
                 sh "sed -i 's|{{VER}}|${IMAGE_VER}|g' deployment_myapp.yml"
                 sh 'scp -P2222 deployment_myapp.yml vagrant@10.0.2.2:/home/vagrant'
                 sh "ssh -p2222 vagrant@10.0.2.2 'kubectl apply -f /home/vagrant/deployment_myapp.yml'"
