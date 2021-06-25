@@ -30,7 +30,7 @@ pipeline {
         }
         stage("Deploy to k8s") {
             steps {
-                sh "docker save > myapp:${IMAGE_VER}"
+                sh "docker save myapp:${IMAGE_VER} > myapp.tar"
                 sh 'scp -P2222 myapp.tar vagrant@10.0.2.2:/home/vagrant'
                 sh "ssh -p2222 vagrant@10.0.2.2 'docker load < /home/vagrant/myapp.tar myapp:${IMAGE_VER} && rm /home/vagrant/myapp.tar'"
                 sh 'rm myapp.tar'
