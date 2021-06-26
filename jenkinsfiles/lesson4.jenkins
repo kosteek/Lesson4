@@ -13,7 +13,7 @@ pipeline {
         timestamps()
     }
     environment {
-        IMAGE_VER = '0.0.3'
+        IMAGE_VER = '0.0.4'
     }
     stages {
         stage("Compile") {
@@ -40,7 +40,8 @@ pipeline {
                 sh 'scp -P2222 configmap.yml vagrant@10.0.2.2:/home/vagrant'
                 sh 'scp -P2222 service.yml vagrant@10.0.2.2:/home/vagrant'
                 sh 'scp -P2222 pvc.yml vagrant@10.0.2.2:/home/vagrant'
-                sh "ssh -p2222 vagrant@10.0.2.2 'kubectl apply -f /home/vagrant/pvc.yml' -f /home/vagrant/configmap.yml -f /home/vagrant/deployment_mysql.yml -f /home/vagrant/service_mysql.yml -f /home/vagrant/deployment_myapp.yml  -f /home/vagrant/service.yml "
+                sh 'scp -P2222 ingress.yml vagrant@10.0.2.2:/home/vagrant'
+                sh "ssh -p2222 vagrant@10.0.2.2 'kubectl apply -f /home/vagrant/pvc.yml' -f /home/vagrant/configmap.yml -f /home/vagrant/deployment_mysql.yml -f /home/vagrant/service_mysql.yml -f /home/vagrant/deployment_myapp.yml  -f /home/vagrant/service.yml -f /home/vagrant/ingress.yml"
             }
         }
     }
