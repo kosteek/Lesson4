@@ -12,4 +12,3 @@ spec:
             name: myapp-service
             port:
               number: 8088
-        path: /
