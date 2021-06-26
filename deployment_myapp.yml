@@ -29,7 +29,7 @@ spec:
              path: /
              port: 8088
            periodSeconds: 10
-           suckcessThreshold: 1
+           successThreshold: 1
            timeoutSeconds: 1
          livenessProbe:
            failureThreshold: 3
