@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -20,7 +21,7 @@ func dbConn() (db *sql.DB) {
 	dbUser := "root"
 	dbPass := "root"
 	dbName := "goblog"
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(mysql:3306)/"+dbName)
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(db:3306)/"+dbName)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -49,6 +50,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		emp.City = city
 		res = append(res, emp)
 	}
+	fmt.Println(r.URL.Query().Encode())
 	tmpl.ExecuteTemplate(w, "Index", res)
 	defer db.Close()
 }
@@ -72,11 +74,13 @@ func Show(w http.ResponseWriter, r *http.Request) {
 		emp.Name = name
 		emp.City = city
 	}
+	fmt.Println(r.URL.Query().Encode())
 	tmpl.ExecuteTemplate(w, "Show", emp)
 	defer db.Close()
 }
 
 func New(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL.Query().Encode())
 	tmpl.ExecuteTemplate(w, "New", nil)
 }
 
@@ -100,6 +104,7 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 		emp.City = city
 	}
 	tmpl.ExecuteTemplate(w, "Edit", emp)
+	fmt.Println(r.URL.Query().Encode())
 	defer db.Close()
 }
 
@@ -116,6 +121,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 		log.Println("INSERT: Name: " + name + " | City: " + city)
 	}
 	defer db.Close()
+	fmt.Println(r.URL.Query().Encode())
 	http.Redirect(w, r, "/", 301)
 }
 
@@ -133,6 +139,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		log.Println("UPDATE: Name: " + name + " | City: " + city)
 	}
 	defer db.Close()
+	fmt.Println(r.URL.Query().Encode())
 	http.Redirect(w, r, "/", 301)
 }
 
@@ -146,19 +153,7 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	delForm.Exec(emp)
 	log.Println("DELETE")
 	defer db.Close()
-	http.Redirect(w, r, "/", 301)
-}
-
-func Get(w http.ResponseWriter, r *http.Request) {
-	db := dbConn()
-	emp := r.URL.Query().Get("id")
-	delForm, err := db.Prepare("DELETE FROM Employee WHERE id=?")
-	if err != nil {
-		panic(err.Error())
-	}
-	delForm.Exec(emp)
-	log.Println("DELETE")
-	defer db.Close()
+	fmt.Println(r.URL.Query().Encode())
 	http.Redirect(w, r, "/", 301)
 }
 
