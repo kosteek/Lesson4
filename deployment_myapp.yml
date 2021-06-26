@@ -37,6 +37,6 @@ spec:
              path: /
              port: 8088
            periodSeconds: 10
-           suckcessThreshold: 1
+           succcessThreshold: 1
            timeoutSeconds: 1
            initialDelaySeconds: 10
