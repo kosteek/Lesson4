@@ -23,7 +23,7 @@ spec:
          imagePullPolicy: Never
          ports:
          - containerPort: 8088
-         readnessProbe:
+         readinessProbe:
            failureThreshold: 3
            httpGet:
              path: /
