@@ -50,7 +50,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		emp.City = city
 		res = append(res, emp)
 	}
-	fmt.Println(r.URL.Query().Encode())
+	fmt.Println(r.URL.RequestURI())
 	tmpl.ExecuteTemplate(w, "Index", res)
 	defer db.Close()
 }
@@ -74,7 +74,7 @@ func Show(w http.ResponseWriter, r *http.Request) {
 		emp.Name = name
 		emp.City = city
 	}
-	fmt.Println(r.URL.Query().Encode())
+	fmt.Println(r.URL.RequestURI())
 	tmpl.ExecuteTemplate(w, "Show", emp)
 	defer db.Close()
 }
@@ -104,7 +104,7 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 		emp.City = city
 	}
 	tmpl.ExecuteTemplate(w, "Edit", emp)
-	fmt.Println(r.URL.Query().Encode())
+	fmt.Println(r.URL.RequestURI())
 	defer db.Close()
 }
 
@@ -121,7 +121,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 		log.Println("INSERT: Name: " + name + " | City: " + city)
 	}
 	defer db.Close()
-	fmt.Println(r.URL.Query().Encode())
+	fmt.Println(r.URL.RequestURI())
 	http.Redirect(w, r, "/", 301)
 }
 
@@ -139,7 +139,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		log.Println("UPDATE: Name: " + name + " | City: " + city)
 	}
 	defer db.Close()
-	fmt.Println(r.URL.Query().Encode())
+	fmt.Println(r.URL.RequestURI())
 	http.Redirect(w, r, "/", 301)
 }
 
@@ -153,7 +153,7 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	delForm.Exec(emp)
 	log.Println("DELETE")
 	defer db.Close()
-	fmt.Println(r.URL.Query().Encode())
+	fmt.Println(r.URL.RequestURI())
 	http.Redirect(w, r, "/", 301)
 }
 
