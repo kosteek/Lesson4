@@ -20,7 +20,7 @@ func dbConn() (db *sql.DB) {
 	dbUser := "root"
 	dbPass := "root"
 	dbName := "goblog"
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(mysql.mysql:3306)/"+dbName)
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(mysql:3306)/"+dbName)
 	if err != nil {
 		panic(err.Error())
 	}
