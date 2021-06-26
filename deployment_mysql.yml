@@ -34,7 +34,7 @@ spec:
           timeoutSeconds: 1
         livenessProbe:
           exec:
-            comman: ["mysqladmin", "ping"]
+            command: ["mysqladmin", "ping"]
           periodSeconds: 10
           timeoutSeconds: 5
           initialDelaySeconds: 30
