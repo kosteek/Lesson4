@@ -27,17 +27,6 @@ spec:
           value: root
         - name: MYSQL_DATABASE
           value: goblog
-        readinessProbe:
-          exec:
-            command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1"]
-          periodSeconds: 2
-          timeoutSeconds: 1
-        livenessProbe:
-          exec:
-            command: ["mysqladmin", "ping"]
-          periodSeconds: 10
-          timeoutSeconds: 5
-          initialDelaySeconds: 30
         resources:
           requests:
             cpu: 1
