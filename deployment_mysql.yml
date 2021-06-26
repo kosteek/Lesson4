@@ -46,9 +46,9 @@ spec:
              cpu: 1
              memory: 1Gi
          volumeMounts:
-        - name: mysql-initdb
+         - name: mysql-initdb
           mountPath: /docker-entrypoint-initdb.d
-      volumes:
-      - name: mysql-initdb
-        configMap:
-          name: mysql-initdb-config
+       volumes:
+       - name: mysql-initdb
+         configMap:
+           name: mysql-initdb-config
