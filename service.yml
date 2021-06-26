@@ -6,6 +6,7 @@ spec:
   ports:
   - port: 8088
     targetPort: 8088
+    nodePort: 30007
   selector:
     app: myapp
-  type: ClusterIP
+  type: NodePort
