@@ -36,7 +36,7 @@ pipeline {
                 sh "sed -i 's|{{VER}}|${IMAGE_VER}|g' deployment_myapp.yml"
                 sh 'scp -P2222 deployment_myapp.yml vagrant@10.0.2.2:/home/vagrant'
                 sh 'scp -P2222 configmap.yml vagrant@10.0.2.2:/home/vagrant'
-                sh "ssh -p2222 vagrant@10.0.2.2 'kubectl apply -f /home/vagrant/deployment_myapp.yml -f /home/vagrant/configmap.yml'"
+                sh "ssh -p2222 vagrant@10.0.2.2 'kubectl apply -f /home/vagrant/deployment_myapp.yml -f /home/vagrant/configmap.yml -f /home/vagrant/service.yaml'"
             }
         }
     }
