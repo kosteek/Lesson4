@@ -1,54 +1,54 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-   name: mysql
+  name: mysql
 spec:
-   replicas: 1
-   selector:
-     matchLabels:
-       app: mysql
-   strategy:
-     rollingUpdate:
-       maxSurge: 1
-       maxUnavailable: 0
-     type: RollingUpdate
-   template:
-     metadata:
-       labels:
-         app: mysql
-     spec:
-       containers:
-       - name: mysql
-         image: mysql:5.6
-         ports:
-         - containerPort: 3306
-         env:
-         - name: MYSQL_ROOT_PASSWORD
-           value: root
-         - name: MYSQL_DATABASE
-           value: goblog
-         readinessProbe:
-           exec:
-             command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1"]
-           periodSeconds: 2
-           timeoutSeconds: 1
-         livenessProbe:
-           exec:
-             comman: ["mysqladmin", "ping"]
-           periodSeconds: 10
-           timeoutSeconds: 5
-           initialDelaySeconds: 30
-         resources:
-           requests:
-             cpu: 1
-             memory: 1Gi
-           limits:
-             cpu: 1
-             memory: 1Gi
-         volumeMounts:
-         - name: mysql-initdb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.6
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_DATABASE
+          value: goblog
+        readinessProbe:
+          exec:
+            command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1"]
+          periodSeconds: 2
+          timeoutSeconds: 1
+        livenessProbe:
+          exec:
+            comman: ["mysqladmin", "ping"]
+          periodSeconds: 10
+          timeoutSeconds: 5
+          initialDelaySeconds: 30
+        resources:
+          requests:
+            cpu: 1
+            memory: 1Gi
+          limits:
+            cpu: 1
+            memory: 1Gi
+        volumeMounts:
+        - name: mysql-initdb
           mountPath: /docker-entrypoint-initdb.d
-       volumes:
-       - name: mysql-initdb
-         configMap:
-           name: mysql-initdb-config
+      volumes:
+      - name: mysql-initdb
+        configMap:
+          name: mysql-initdb-config
