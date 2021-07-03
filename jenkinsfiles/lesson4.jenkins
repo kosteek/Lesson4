@@ -41,7 +41,7 @@ pipeline {
                 sh 'scp -P2222 service.yml vagrant@10.0.2.2:/home/vagrant'
                 sh 'scp -P2222 pvc.yml vagrant@10.0.2.2:/home/vagrant'
                 sh 'scp -P2222 ingress.yml vagrant@10.0.2.2:/home/vagrant'
-                sh "ssh -p2222 vagrant@10.0.2.2 'kubectl apply -f /home/vagrant/pvc.yml' -f /home/vagrant/configmap.yml -f /home/vagrant/deployment_mysql.yml -f /home/vagrant/service_mysql.yml -f /home/vagrant/deployment_myapp.yml  -f /home/vagrant/service.yml -f /home/vagrant/ingress.yml"
+                sh "ssh -p2222 vagrant@10.0.2.2 'kubectl apply -f /home/vagrant/configmap.yml -f /home/vagrant/statefulset.yml -f /home/vagrant/service_mysql.yml -f /home/vagrant/deployment.yml  -f /home/vagrant/service_myapp.yml -f /home/vagrant/ingress.yml'"
             }
         }
     }
