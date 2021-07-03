@@ -16,12 +16,24 @@ type Employee struct {
 	City string
 }
 
-func dbConn() (db *sql.DB) {
+func dbConnW() (db *sql.DB) {
+	dbDriver := "mysql"
+	dbUser := "root"
+	dbPass := ""
+	dbName := "goblog"
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(mysql-0.mysql:3306)/"+dbName)
+	if err != nil {
+		panic(err.Error())
+	}
+	return db
+}
+
+func dbConnR() (db *sql.DB) {
 	dbDriver := "mysql"
 	dbUser := "root"
 	dbPass := "root"
 	dbName := "goblog"
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(mysql:3306)/"+dbName)
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(mysql-read:3306)/"+dbName)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -31,7 +43,7 @@ func dbConn() (db *sql.DB) {
 var tmpl = template.Must(template.ParseGlob("form/*"))
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	db := dbConn()
+	db := dbConnR()
 	selDB, err := db.Query("SELECT * FROM Employee ORDER BY id DESC")
 	if err != nil {
 		panic(err.Error())
@@ -50,13 +62,12 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		emp.City = city
 		res = append(res, emp)
 	}
-	fmt.Println(r.URL.RequestURI())
 	tmpl.ExecuteTemplate(w, "Index", res)
 	defer db.Close()
 }
 
 func Show(w http.ResponseWriter, r *http.Request) {
-	db := dbConn()
+	db := dbConnR()
 	nId := r.URL.Query().Get("id")
 	selDB, err := db.Query("SELECT * FROM Employee WHERE id=?", nId)
 	if err != nil {
@@ -74,18 +85,16 @@ func Show(w http.ResponseWriter, r *http.Request) {
 		emp.Name = name
 		emp.City = city
 	}
-	fmt.Println(r.URL.RequestURI())
 	tmpl.ExecuteTemplate(w, "Show", emp)
 	defer db.Close()
 }
 
 func New(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.URL.Query().Encode())
 	tmpl.ExecuteTemplate(w, "New", nil)
 }
 
 func Edit(w http.ResponseWriter, r *http.Request) {
-	db := dbConn()
+	db := dbConnR()
 	nId := r.URL.Query().Get("id")
 	selDB, err := db.Query("SELECT * FROM Employee WHERE id=?", nId)
 	if err != nil {
@@ -104,12 +113,11 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 		emp.City = city
 	}
 	tmpl.ExecuteTemplate(w, "Edit", emp)
-	fmt.Println(r.URL.RequestURI())
 	defer db.Close()
 }
 
 func Insert(w http.ResponseWriter, r *http.Request) {
-	db := dbConn()
+	db := dbConnW()
 	if r.Method == "POST" {
 		name := r.FormValue("name")
 		city := r.FormValue("city")
@@ -121,12 +129,11 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 		log.Println("INSERT: Name: " + name + " | City: " + city)
 	}
 	defer db.Close()
-	fmt.Println(r.URL.RequestURI())
 	http.Redirect(w, r, "/", 301)
 }
 
 func Update(w http.ResponseWriter, r *http.Request) {
-	db := dbConn()
+	db := dbConnW()
 	if r.Method == "POST" {
 		name := r.FormValue("name")
 		city := r.FormValue("city")
@@ -139,12 +146,11 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		log.Println("UPDATE: Name: " + name + " | City: " + city)
 	}
 	defer db.Close()
-	fmt.Println(r.URL.RequestURI())
 	http.Redirect(w, r, "/", 301)
 }
 
 func Delete(w http.ResponseWriter, r *http.Request) {
-	db := dbConn()
+	db := dbConnW()
 	emp := r.URL.Query().Get("id")
 	delForm, err := db.Prepare("DELETE FROM Employee WHERE id=?")
 	if err != nil {
@@ -153,7 +159,6 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	delForm.Exec(emp)
 	log.Println("DELETE")
 	defer db.Close()
-	fmt.Println(r.URL.RequestURI())
 	http.Redirect(w, r, "/", 301)
 }
 
