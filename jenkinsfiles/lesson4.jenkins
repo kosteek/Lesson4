@@ -13,7 +13,7 @@ pipeline {
         timestamps()
     }
     environment {
-        IMAGE_VER = '0.0.11'
+        IMAGE_VER = '0.0.12'
     }
     stages {
         stage("Compile") {
