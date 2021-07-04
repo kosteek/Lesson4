@@ -30,7 +30,6 @@ spec:
           # Copy appropriate conf.d files from config-map to emptyDir.
           if [[ $ordinal -eq 0 ]]; then
             cp /mnt/config-map/primary.cnf /mnt/conf.d/
-            cp /mnt/config-map/initdb.sql /docker-entrypoint-initdb.d/
           else
             cp /mnt/config-map/replica.cnf /mnt/conf.d/
           fi          
@@ -72,6 +71,14 @@ spec:
           value: root
         - name: MYSQL_DATABASE
           value: goblog
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+        - name: mysql-initdb
+          mountPath: /docker-entrypoint-initdb.d
         resources:
           requests:
             cpu: 300m
@@ -151,6 +158,9 @@ spec:
       - name: config-map
         configMap:
           name: mysql
+      - name: mysql-initdb
+        configMap:
+          name: mysql-initdb-config
   volumeClaimTemplates:
   - metadata:
       name: data
