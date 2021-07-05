@@ -22,14 +22,14 @@ pipeline {
     }
     stages {
         stage("Compile") {
+            cleanWs()
+            checkout scm
             agent {
                 docker {
                     image 'golang:1.16'
                 }
             }
             steps {
-                cleanWs()
-                checkout scm
                 script {
                     sh 'ls -la ${WORKSPACE}'
                     sh 'cd ${GOPATH}/src'
