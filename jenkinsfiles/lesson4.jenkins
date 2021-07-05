@@ -31,9 +31,10 @@ pipeline {
                 cleanWs()
                 checkout scm
                 script {
-                    sh 'cd ${GOPATH}/src'
-                    sh 'mkdir -p ${GOPATH}/src/MY_PROJECT_DIRECTORY'
-                    sh 'cp -r ${WORKSPACE}/*.go ${GOPATH}/src/MY_PROJECT_DIRECTORY'
+                    sh "ls -la ${WORKSPACE}"
+                    sh "cd ${GOPATH}/src"
+                    sh "mkdir -p ${GOPATH}/src/MY_PROJECT_DIRECTORY"
+                    sh 'cp ${WORKSPACE}/main.go ${GOPATH}/src/MY_PROJECT_DIRECTORY'
                     sh 'cd ${GOPATH}/src/MY_PROJECT_DIRECTORY'
                     sh 'go mod init go.mod &&  go mod tidy && GOCACHE=${GOPATH}/src/MY_PROJECT_DIRECTORY go get -u github.com/go-sql-driver/mysql && GOCACHE=${GOPATH}/src/MY_PROJECT_DIRECTORY CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ${WORKSPACE}/app .'
                 }
