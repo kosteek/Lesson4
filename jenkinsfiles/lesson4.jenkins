@@ -28,6 +28,7 @@ pipeline {
                 }
             }
             steps {
+                cleanWs()
                 checkout scm
                 script {
                     sh 'cd ${GOPATH}/src'
