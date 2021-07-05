@@ -11,7 +11,6 @@ pipeline {
     }
     triggers { pollSCM('* * * * *') }
     options {
-        skipDefaultCheckout(true)
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
@@ -22,8 +21,6 @@ pipeline {
     }
     stages {
         stage("Compile") {
-            cleanWs()
-            checkout scm
             agent {
                 docker {
                     image 'golang:1.16'
