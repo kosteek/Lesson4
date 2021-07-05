@@ -23,7 +23,7 @@ pipeline {
         stage("Compile") {
             agent {
                 docker {
-                    image 'golang:1.16'
+                    image 'golang:1.16-alpine'
                 }
             }
             steps {
