@@ -22,14 +22,16 @@ pipeline {
     }
     stages {
         stage("Compile") {
+            agent {
+                docker {
+                    image 'golang:1.16'
+                    args "--rm -i -v $PWD:/app -w /app golang:1.16"
+                }
             steps {
                 cleanWs()
                 checkout scm
-                agent {
-                    docker {
-                        image 'golang:1.16'
-                        args "--rm -i -v $PWD:/app -w /app golang:1.16 bash -c 'go mod init go.mod &&  go mod tidy && go get -u github.com/go-sql-driver/mysql && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .'"
-                    }
+                script {
+                    sh 'go mod init go.mod &&  go mod tidy && go get -u github.com/go-sql-driver/mysql && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .'
                 }
             }
         }
