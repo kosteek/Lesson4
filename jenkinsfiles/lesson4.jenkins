@@ -30,6 +30,7 @@ pipeline {
             steps {
                 checkout scm
                 script {
+                    sh 'ls -la'
                     sh 'go mod init go.mod &&  go mod tidy && go get -u github.com/go-sql-driver/mysql && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .'
                 }
             }
