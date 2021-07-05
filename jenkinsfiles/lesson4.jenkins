@@ -3,7 +3,9 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
-    agent any
+    agent {
+        label 'master'
+    }
     parameters {
          booleanParam(name: 'AUTO_DEPLOY', defaultValue: false, description: 'Automate deploy to k8s')
     }
