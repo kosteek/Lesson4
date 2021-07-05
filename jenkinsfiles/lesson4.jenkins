@@ -33,7 +33,7 @@ pipeline {
         }
         stage("Deploy to k8s") {
             when {
-                expression params.AUTO_DEPLOY
+                expression {params.AUTO_DEPLOY}
             }
             steps {
                 sh "docker save myapp:${IMAGE_VER} > myapp.tar"
