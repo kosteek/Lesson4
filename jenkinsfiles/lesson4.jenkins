@@ -31,7 +31,9 @@ pipeline {
                     sh 'cd ${GOPATH}/src'
                     sh 'mkdir -p ${GOPATH}/src/MY_PROJECT_DIRECTORY'
                     sh 'cp ${WORKSPACE}/main.go ${GOPATH}/src/MY_PROJECT_DIRECTORY'
-                    sh 'go build'
+                    sh 'cd ${GOPATH}/src/MY_PROJECT_DIRECTORY'
+                    sh 'go mod init go.mod &&  go mod tidy && GOCACHE=${GOPATH}/src/MY_PROJECT_DIRECTORY go get -u github.com/go-sql-driver/mysql && GOCACHE=${GOPATH}/src/MY_PROJECT_DIRECTORY CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ${WORKSPACE}/app . '
+                    sh 'ls ${WORKSPACE}'
                 }
             }
         }
