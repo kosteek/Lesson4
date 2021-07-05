@@ -6,6 +6,9 @@ pipeline {
     agent {
         label 'master'
     }
+    parameters {
+         booleanParam(name: 'AUTO_DEPLOY', defaultValue: false, description: 'Automate deploy to k8s')
+    }
     triggers { pollSCM('* * * * *') }
     options {
         skipDefaultCheckout(true)
@@ -29,6 +32,9 @@ pipeline {
             }
         }
         stage("Deploy to k8s") {
+            when {
+                expressions params.AUTO_DEPLOY
+            }
             steps {
                 sh "docker save myapp:${IMAGE_VER} > myapp.tar"
                 sh 'scp -P2222 myapp.tar vagrant@10.0.2.2:/home/vagrant'
