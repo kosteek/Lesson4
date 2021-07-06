@@ -83,7 +83,7 @@ pipeline {
             steps {
                 sh "echo $KUBECFG"
                 sh "export KUBECONFIG=$KUBECONFIG:$HOME/config"
-                sh "kubectl apply -f deployment.yml"
+                sh 'kubectl apply -f deployment.yml'
 
             }
         }
