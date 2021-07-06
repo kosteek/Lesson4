@@ -80,8 +80,8 @@ pipeline {
                 expression {params.DEPLOY == "Compile, build and deploy" || params.DEPLOY == "Only deploy"}
             }
             steps {
-                kubeconfig(credentialsId: 'kubeconfig', serverUrl: '') {
-                    ls -la
+                script { 
+                    kubernetesDeploy(configs: "deployment.yml", kubeconfigId: "kubeconfig")
                 }
 
             }
