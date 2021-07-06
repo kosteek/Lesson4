@@ -63,6 +63,14 @@ pipeline {
                     }
                 } 
             }
+        }
+        stage('Cleaning up') {
+            when {
+                expression {params.DEPLOY == "Compile and build" || params.DEPLOY == "Compile, build and deploy"}
+            }
+            steps { 
+                sh "docker rmi $registry:$BUILD_NUMBER" 
+            }
         } 
         stage("Deploy to k8s") {
             when {
