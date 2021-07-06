@@ -81,7 +81,7 @@ pipeline {
             }
             steps {
                 NUM_IMG = sh (
-                    script: "docker images | awk '{print $2}' | awk 'NR==2'",
+                    script: "docker images | awk '{print \$2}' | awk 'NR==2'",
                     returnStdout: true
                 ).trim()
                 sh "sed -i 's|{{VER}}|$NUM_IMG|g' deployment.yml"
