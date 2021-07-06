@@ -7,7 +7,7 @@ pipeline {
         label 'master'
     }
     parameters {
-         booleanParam(name: 'AUTO_DEPLOY', defaultValue: false, description: 'Automate deploy to k8s')
+         choice(choices: ['Compile and build', 'Compile, build and deploy', 'Only deploy'], name: 'DEPLOY')
     }
     triggers { pollSCM('* * * * *') }
     options {
@@ -21,6 +21,9 @@ pipeline {
     }
     stages {
         stage("Compile") {
+            when {
+                expression {params.DEPLOY == "Compile and build" || params.DEPLOY == "Compile, build and deploy"}
+            }
             agent {
                 docker {
                     image 'golang:1.16-alpine'
@@ -38,6 +41,9 @@ pipeline {
             }
         }
         stage("Build") {
+            when {
+                expression {params.DEPLOY == "Compile and build" || params.DEPLOY == "Compile, build and deploy"}
+            }
             steps {
                 unstash 'app'
                 script {
@@ -48,7 +54,7 @@ pipeline {
         }
         stage("Deploy to k8s") {
             when {
-                expression {params.AUTO_DEPLOY}
+                expression {params.DEPLOY == "Compile, build and deploy" || params.DEPLOY == "Only deploy"}
             }
             steps {
                 sh "docker save myapp:${IMAGE_VER} > myapp.tar"
