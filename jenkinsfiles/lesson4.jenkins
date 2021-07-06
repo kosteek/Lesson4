@@ -77,7 +77,7 @@ pipeline {
                         script: "docker images| grep $registry| sort -n -r -k 2  | awk '{print \$2}' | awk 'NR==$cnt_img'",
                         returnStdout: true
                     ).trim()
-                    if ($NUM_IMG != '') {
+                    if (NUM_IMG != '') {
                         sh "docker rmi $registry:$NUM_IMG"
                     }
                     sh "docker rmi $registry"
