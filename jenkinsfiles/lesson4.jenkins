@@ -18,8 +18,7 @@ pipeline {
         IMAGE_VER = "0.0.${env.BUILD_ID}"
         registry = "kosteek/lesson4" 
         registryCredential = 'dockerhub_id' 
-
-
+        dockerImage = '' 
     }
     stages {
         stage("Compile") {
