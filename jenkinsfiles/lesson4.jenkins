@@ -80,6 +80,7 @@ pipeline {
                 expression {params.DEPLOY == "Compile, build and deploy" || params.DEPLOY == "Only deploy"}
             }
             steps {
+                sh "sed -i 's|{{VER}}|$BUILD_NUMBER|g' deployment.yml"
                 sh 'kubectl apply -f deployment.yml'
 
             }
