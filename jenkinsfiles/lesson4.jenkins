@@ -80,8 +80,9 @@ pipeline {
                 expression {params.DEPLOY == "Compile, build and deploy" || params.DEPLOY == "Only deploy"}
             }
             steps {
-                sh "export KUBECONFIG=$KUBECONFIG:$HOME/config"
-                sh 'kubectl apply -f deployment.yml'
+                sh 'echo $HOME'
+                sh 'kubectl config --kubeconfig=$HOME/config'
+                sh 'kubectl config --kubeconfig=$HOME/config apply -f deployment.yml'
 
             }
         }
