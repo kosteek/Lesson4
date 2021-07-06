@@ -15,7 +15,6 @@ pipeline {
         timestamps()
     }
     environment {
-        IMAGE_VER = "0.0.${env.BUILD_ID}"
         registry = "kosteek/lesson4" 
         registryCredential = 'dockerhub_id' 
         dockerImage = ''
@@ -81,17 +80,10 @@ pipeline {
                 expression {params.DEPLOY == "Compile, build and deploy" || params.DEPLOY == "Only deploy"}
             }
             steps {
-                sh "docker save myapp:${IMAGE_VER} > myapp.tar"
-                sh 'scp -P2222 myapp.tar vagrant@10.0.2.2:/home/vagrant'
-                sh "ssh -p2222 vagrant@10.0.2.2 'docker load < /home/vagrant/myapp.tar && rm /home/vagrant/myapp.tar'"
-                sh "sed -i 's|{{VER}}|${IMAGE_VER}|g' deployment.yml"
-                sh 'scp -P2222 deployment.yml vagrant@10.0.2.2:/home/vagrant'
-                sh 'scp -P2222 statefulset.yml vagrant@10.0.2.2:/home/vagrant'
-                sh 'scp -P2222 service_mysql.yml vagrant@10.0.2.2:/home/vagrant'
-                sh 'scp -P2222 configmap.yml vagrant@10.0.2.2:/home/vagrant'
-                sh 'scp -P2222 service_myapp.yml vagrant@10.0.2.2:/home/vagrant'
-                sh 'scp -P2222 ingress.yml vagrant@10.0.2.2:/home/vagrant'
-                sh "ssh -p2222 vagrant@10.0.2.2 'kubectl apply -f /home/vagrant/configmap.yml -f /home/vagrant/statefulset.yml -f /home/vagrant/service_mysql.yml -f /home/vagrant/deployment.yml  -f /home/vagrant/service_myapp.yml -f /home/vagrant/ingress.yml'"
+                kubeconfig(credentialsId: 'kubeconfig', serverUrl: '') {
+                    ls -la
+                }
+
             }
         }
     }
