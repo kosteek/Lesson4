@@ -19,7 +19,6 @@ pipeline {
         registryCredential = 'dockerhub_id' 
         dockerImage = ''
         dockerImageLatest = ''
-        KUBECFG = credentials('kubeconfigdeploy')
     }
     stages {
         stage("Compile") {
@@ -81,7 +80,6 @@ pipeline {
                 expression {params.DEPLOY == "Compile, build and deploy" || params.DEPLOY == "Only deploy"}
             }
             steps {
-                sh "echo $KUBECFG"
                 sh "export KUBECONFIG=$KUBECONFIG:$HOME/config"
                 sh 'kubectl apply -f deployment.yml'
 
