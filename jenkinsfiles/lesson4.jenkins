@@ -18,7 +18,8 @@ pipeline {
         IMAGE_VER = "0.0.${env.BUILD_ID}"
         registry = "kosteek/lesson4" 
         registryCredential = 'dockerhub_id' 
-        dockerImage = '' 
+        dockerImage = ''
+        dockerImageLatest = ''
     }
     stages {
         stage("Compile") {
@@ -49,6 +50,7 @@ pipeline {
                 unstash 'app'
                 script {
                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    dockerImageLatest = docker.build registry + "latest"
                 }
             }
         }
@@ -59,7 +61,8 @@ pipeline {
             steps { 
                 script { 
                     docker.withRegistry( '', registryCredential ) { 
-                        dockerImage.push() 
+                        dockerImage.push()
+                        dockerImageLatest.push()
                     }
                 } 
             }
@@ -69,7 +72,8 @@ pipeline {
                 expression {params.DEPLOY == "Compile and build" || params.DEPLOY == "Compile, build and deploy"}
             }
             steps { 
-                sh "docker rmi $registry:$BUILD_NUMBER" 
+                sh "docker rmi $registry:$BUILD_NUMBER"
+                sh "docker rmi $registry:latest" 
             }
         } 
         stage("Deploy to k8s") {
