@@ -19,6 +19,7 @@ pipeline {
         registryCredential = 'dockerhub_id' 
         dockerImage = ''
         dockerImageLatest = ''
+        cnt_img = '11'
     }
     stages {
         stage("Compile") {
@@ -70,8 +71,18 @@ pipeline {
             when {
                 expression {params.DEPLOY == "Compile and build" || params.DEPLOY == "Compile, build and deploy"}
             }
-            steps { 
-                sh "docker rmi $registry"
+            steps {
+                script {
+                    NUM_IMG = sh (
+                        script: "docker images| grep $registry| sort -n -r -k 2  | awk '{print \$2}' | awk 'NR==$cnt_img'",
+                        returnStdout: true
+                    ).trim()
+                    if ($NUM_IMG != '') {
+                        sh "docker rmi $registry:$NUM_IMG"
+                    }
+                    sh "docker rmi $registry"
+                    
+                }
                  
             }
         } 
