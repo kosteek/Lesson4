@@ -97,7 +97,12 @@ pipeline {
                         returnStdout: true
                     ).trim()
                     sh "sed -i 's|{{VER}}|$NUM_IMG|g' deployment.yml"
+                    sh 'kubectl apply -f configmap.yml'
+                    sh 'kubectl apply -f statefulset.yml'
+                    sh 'kubectl apply -f service_mysql.yml'
                     sh 'kubectl apply -f deployment.yml'
+                    sh 'kubectl apply -f service_myapp.yml'
+                    sh 'kubectl apply -f ingress.yml'
                 }
 
             }
